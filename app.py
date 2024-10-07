@@ -103,10 +103,15 @@ def hitung_hasil(message):
 
 # Fungsi untuk konversi Solana, Rupiah, dan Dolar
 @bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=lambda message: True)
 def converter(message):
     chat_id = message.chat.id
     text = message.text.lower()
     price_usd, price_idr = get_solana_price()
+
+    if price_usd is None or price_idr is None:
+        bot.send_message(chat_id, "Gagal mengambil harga Solana saat ini. Coba lagi nanti.")
+        return
 
     if text.startswith('sol '):
         try:
@@ -133,7 +138,8 @@ def converter(message):
         except ValueError:
             bot.send_message(chat_id, "Input tidak valid. Contoh: 'dolar 1'")
     else:
-        bot.send_message(chat_id, "Ketik /start untuk memulai lagi ketik sol <angka>, RP <angka> dolar  <angka> unuk konversi..")
+        bot.send_message(chat_id, "Perintah tidak dikenali. Gunakan 'sol', 'RP', atau 'dolar' diikuti jumlah.")
+
 
 # Fungsi untuk update harga Solana setiap jam
 def update_solana_price():
