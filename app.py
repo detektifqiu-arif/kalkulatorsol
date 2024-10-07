@@ -14,11 +14,18 @@ def format_rupiah(angka):
 
 # Fungsi untuk mendapatkan harga Solana dalam USD dan IDR
 def get_solana_price():
-    url = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd,idr'
-    response = requests.get(url).json()
-    price_usd = response['solana']['usd']
-    price_idr = response['solana']['idr']
-    return price_usd, price_idr
+    try:
+        url = 'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd,idr'
+        response = requests.get(url).json()
+        if 'solana' in response:
+            price_usd = response['solana']['usd']
+            price_idr = response['solana']['idr']
+            return price_usd, price_idr
+        else:
+            return None, None
+    except requests.RequestException as e:
+        print(f"Error while fetching Solana price: {e}")
+        return None, None
 
 # Variabel sementara untuk menyimpan input pengguna
 user_data = {}
